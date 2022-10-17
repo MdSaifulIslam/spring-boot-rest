@@ -1,44 +1,54 @@
 package com.springlearn.crudDemp.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.springlearn.crudDemp.dao.EmployeeDao;
+import com.springlearn.crudDemp.dao.EmployeeRepository;
 import com.springlearn.crudDemp.entity.Employee;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
 	
-	EmployeeDao dao;
-
+//	private EmployeeDao dao;
+//
+//	@Autowired
+//	public EmployeeServiceImpl(@Qualifier("employeeDaoJpaImple") EmployeeDao dao) {
+//		this.dao = dao;
+//	}
+	
+	private EmployeeRepository employeeRepositoryDao;
+	
 	@Autowired
-	public EmployeeServiceImpl(@Qualifier("employeeDaoJpaImple") EmployeeDao dao) {
-		this.dao = dao;
+	public EmployeeServiceImpl(EmployeeRepository employeeRepositoryDao) {
+		this.employeeRepositoryDao = employeeRepositoryDao;
 	}
 
-	@Transactional
 	public List<Employee> findAll() {
-		return dao.findAll();
+		return employeeRepositoryDao.findAll();
 	}
 
-	@Transactional
 	public Employee findById(int id) {
-		return dao.findById(id);
+		Optional<Employee> result = employeeRepositoryDao.findById(id);
+		
+		Employee thEmployee = null;
+		
+		if(result.isPresent()) {
+			thEmployee = result.get();
+		}
+		
+		return thEmployee;
 	}
 
-	@Transactional
 	public void save(Employee thEmployee) {
-		dao.save(thEmployee);
+		employeeRepositoryDao.save(thEmployee);
 		
 	}
 
-	@Transactional
 	public void deleteById(int id) {
-		dao.deleteById(id);
+		employeeRepositoryDao.deleteById(id);
 	}
 
 }
